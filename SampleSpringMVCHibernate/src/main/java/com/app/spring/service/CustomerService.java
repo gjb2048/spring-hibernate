@@ -1,24 +1,50 @@
 package com.app.spring.service;
 
-import java.util.List;
+
 
 import com.app.spring.model.Customer;
+import com.app.spring.model.CustomerInterface;
+import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-/**
- * 
- * @author malalanayake
- *
- */
-public interface CustomerService {
+@Service
+public class CustomerService implements CustomerInterface {
 
-	public void addCustomer(Customer p);
+	private CustomerInterface customerDAO;
 
-	public void updateCustomer(Customer p);
+	public void setCustomerDAO(CustomerInterface customerDAO) {
+		this.customerDAO = customerDAO;
+	}
 
-	public List<Customer> listCustomers();
+	@Override
+	@Transactional
+	public void addCustomer(Customer c) {
+		this.customerDAO.addCustomer(c);
+	}
 
-	public Customer getCustomerById(int id);
+	@Override
+	@Transactional
+	public void updateCustomer(Customer c) {
+		this.customerDAO.updateCustomer(c);
+	}
 
-	public void removeCustomer(int id);
+	@Override
+	@Transactional
+	public List<Customer> listCustomers() {
+		return this.customerDAO.listCustomers();
+	}
+
+	@Override
+	@Transactional
+	public Customer getCustomerById(int id) {
+		return this.customerDAO.getCustomerById(id);
+	}
+
+	@Override
+	@Transactional
+	public void removeCustomer(int id) {
+		this.customerDAO.removeCustomer(id);
+	}
 
 }

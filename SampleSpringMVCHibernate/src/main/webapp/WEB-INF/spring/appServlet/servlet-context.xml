@@ -26,9 +26,9 @@
 		destroy-method="close">
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<beans:property name="url"
-			value="jdbc:mysql://localhost:3306/TestDB" />
+			value="jdbc:mysql://localhost:3306/JavaTestDB" />
 		<beans:property name="username" value="root" />
-		<beans:property name="password" value="root123" />
+		<beans:property name="password" value="" />
 	</beans:bean>
 
 	<!-- Hibernate 4 SessionFactory Bean definition -->
@@ -57,11 +57,11 @@
 	</beans:bean>
 	
 	<!-- Inject the instance to customerDAO reference with adding sessionFactory -->
-	<beans:bean id="customerDAO" class="com.app.spring.dao.impl.CustomerDAOImpl">
+	<beans:bean id="customerDAO" class="com.app.spring.dao.CustomerDAO">
 		<beans:property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
 	</beans:bean>
 	<!-- Inject the instance to service reference with adding customerDao instance -->
-	<beans:bean id="customerService" class="com.app.spring.service.impl.CustomerServiceImpl">
+	<beans:bean id="customerService" class="com.app.spring.service.CustomerService">
 		<beans:property name="customerDAO" ref="customerDAO"></beans:property>
 	</beans:bean>
 	<!-- Set the package where the annotated classes located at ex @Controller -->

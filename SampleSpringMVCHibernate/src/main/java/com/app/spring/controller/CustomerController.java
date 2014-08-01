@@ -1,5 +1,7 @@
 package com.app.spring.controller;
 
+import com.app.spring.model.Customer;
+import com.app.spring.model.CustomerInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -9,17 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.app.spring.model.Customer;
-import com.app.spring.service.CustomerService;
-
 @Controller
 public class CustomerController {
 
-	private CustomerService customerService;
+	private CustomerInterface customerService;
 
 	@Autowired(required = true)
 	@Qualifier(value = "customerService")
-	public void setPersonService(CustomerService cs) {
+	public void setPersonService(CustomerInterface cs) {
 		this.customerService = cs;
 	}
 

@@ -3,10 +3,15 @@
 <html>
     <head>
         <title>Index</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     </head>
-    <body>
-        <h1>Index</h1>
-        <p>${datetime}</p>
-        <p><a href="<c:url value='/customers/' />">Customers</a></td></p>
+    <body class="container-fluid">
+        <div class="row">
+            <h1 class="col-sm-3 col-md-2 col-lg-1">Index</h1>
+            <p class="col-sm-9 col-md-10 col-lg-11">${datetime}</p>
+        </div><div class="row">
+            <h2 class="col-md-12"><a href="<c:url value='/customers/' />">Customers</a></td></h2>
+        </div>
     </body>
 </html>

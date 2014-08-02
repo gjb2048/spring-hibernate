@@ -3,10 +3,13 @@ package com.app.spring.dao;
 import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
 import java.util.List;
+import javax.inject.Inject;
+import javax.inject.Named;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -15,11 +18,12 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
+@Qualifier(value = "customerDAO")
 public class CustomerDAO implements CustomerInterface {
 
 	private static final Logger logger = LoggerFactory.getLogger(CustomerDAO.class);
 
-	private SessionFactory sessionFactory;
+	@Inject @Named("hibernate4AnnotatedSessionFactory") private SessionFactory sessionFactory;
 
 	public void setSessionFactory(SessionFactory sf) {
 		this.sessionFactory = sf;

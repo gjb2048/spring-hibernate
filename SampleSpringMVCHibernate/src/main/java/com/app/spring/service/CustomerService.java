@@ -5,17 +5,20 @@ package com.app.spring.service;
 import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Qualifier(value = "customerService")
 public class CustomerService implements CustomerInterface {
 
-	private CustomerInterface customerDAO;
+	@Autowired @Qualifier(value = "customerDAO") private CustomerInterface customerDAO;
 
-	public void setCustomerDAO(CustomerInterface customerDAO) {
+	/*public void setCustomerDAO(CustomerInterface customerDAO) {
 		this.customerDAO = customerDAO;
-	}
+	}*/
 
 	@Override
 	@Transactional

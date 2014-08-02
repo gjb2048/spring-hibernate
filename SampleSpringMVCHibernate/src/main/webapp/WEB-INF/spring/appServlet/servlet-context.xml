@@ -72,13 +72,13 @@
     </bean>
 	
     <!-- Inject the instance to customerDAO reference with adding sessionFactory -->
-    <bean id="customerDAO" class="com.app.spring.dao.CustomerDAO">
+    <!--bean id="customerDAO" class="com.app.spring.dao.CustomerDAO">
         <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
-    </bean>
+    </bean -->
     <!-- Inject the instance to service reference with adding customerDao instance -->
-    <bean id="customerService" class="com.app.spring.service.CustomerService">
+    <!--bean id="customerService" class="com.app.spring.service.CustomerService">
         <property name="customerDAO" ref="customerDAO"></property>
-    </bean>
+    </bean-->
     <!-- Set the package where the annotated classes located at ex @Controller -->
     <context:component-scan base-package="com.app.spring" />
 

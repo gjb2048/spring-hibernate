@@ -45,6 +45,7 @@
                     <td colspan="2"><c:if test="${!empty customer.name}">
                             <input type="submit"
                                    value="<spring:message text="Edit Customer"/>" />
+                            <input type="button" name="Cancel" value="Cancel" onclick="window.location = '<c:url value='/customers/' />'" />
                         </c:if> <c:if test="${empty customer.name}">
                             <input type="submit" value="<spring:message text="Add Customer"/>" />
                         </c:if></td>

@@ -15,54 +15,55 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class CustomerController {
 
-	private CustomerInterface customerService;
+    private CustomerInterface customerService;
 
-	@Autowired(required = true)
-	@Qualifier(value = "customerService")
-	public void setCustomerService(CustomerInterface cs) {
-		this.customerService = cs;
-	}
+    @Autowired(required = true)
+    @Qualifier(value = "customerService")
+    public void setCustomerService(CustomerInterface cs) {
+        this.customerService = cs;
+    }
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-        public String index(Model model) {
-            model.addAttribute("datetime", new Date());
-            return "index";
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String index(Model model) {
+        model.addAttribute("datetime", new Date());
+        return "index";
+    }
+
+    @RequestMapping(value = "/customers", method = RequestMethod.GET)
+    public String listCustomers(Model model) {
+        model.addAttribute("customer", new Customer());
+        model.addAttribute("listCustomers", this.customerService.listCustomers());
+        return "customer";
+    }
+
+    // For add and update person both
+    @RequestMapping(value = "/customer/add", method = RequestMethod.POST)
+    public String addCustomer(@ModelAttribute("customer") Customer c) {
+
+        if (c.getId() == 0) {
+            // new person, add it
+            this.customerService.addCustomer(c);
+        } else {
+            // existing person, call update
+            this.customerService.updateCustomer(c);
         }
-	@RequestMapping(value = "/customers", method = RequestMethod.GET)
-	public String listCustomers(Model model) {
-		model.addAttribute("customer", new Customer());
-		model.addAttribute("listCustomers", this.customerService.listCustomers());
-		return "customer";
-	}
 
-	// For add and update person both
-	@RequestMapping(value = "/customer/add", method = RequestMethod.POST)
-	public String addCustomer(@ModelAttribute("customer") Customer c) {
+        return "redirect:/customers";
 
-		if (c.getId() == 0) {
-			// new person, add it
-			this.customerService.addCustomer(c);
-		} else {
-			// existing person, call update
-			this.customerService.updateCustomer(c);
-		}
+    }
 
-		return "redirect:/customers";
+    @RequestMapping("/customer/remove/{id}")
+    public String removeCustomer(@PathVariable("id") int id) {
 
-	}
+        this.customerService.removeCustomer(id);
+        return "redirect:/customers";
+    }
 
-	@RequestMapping("/customer/remove/{id}")
-	public String removeCustomer(@PathVariable("id") int id) {
-
-		this.customerService.removeCustomer(id);
-		return "redirect:/customers";
-	}
-
-	@RequestMapping("/customer/edit/{id}")
-	public String editCustomer(@PathVariable("id") int id, Model model) {
-		model.addAttribute("customer", this.customerService.getCustomerById(id));
-		model.addAttribute("listCustomers", this.customerService.listCustomers());
-		return "customer";
-	}
+    @RequestMapping("/customer/edit/{id}")
+    public String editCustomer(@PathVariable("id") int id, Model model) {
+        model.addAttribute("customer", this.customerService.getCustomerById(id));
+        model.addAttribute("listCustomers", this.customerService.listCustomers());
+        return "customer";
+    }
 
 }

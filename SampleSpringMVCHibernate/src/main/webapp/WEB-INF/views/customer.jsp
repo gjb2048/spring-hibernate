@@ -5,44 +5,7 @@
 <html>
     <head>
         <title>Manage Customer</title>
-        <style type="text/css">
-            .tg {
-                border-collapse: collapse;
-                border-spacing: 0;
-                border-color: #ccc;
-            }
-
-            .tg td {
-                font-family: Arial, sans-serif;
-                font-size: 14px;
-                padding: 10px 5px;
-                border-style: solid;
-                border-width: 1px;
-                overflow: hidden;
-                word-break: normal;
-                border-color: #ccc;
-                color: #333;
-                background-color: #fff;
-            }
-
-            .tg th {
-                font-family: Arial, sans-serif;
-                font-size: 14px;
-                font-weight: normal;
-                padding: 10px 5px;
-                border-style: solid;
-                border-width: 1px;
-                overflow: hidden;
-                word-break: normal;
-                border-color: #ccc;
-                color: #333;
-                background-color: #8FBC8F;
-            }
-
-            .tg .tg-4eph {
-                background-color: #f9f9f9
-            }
-        </style>
+        <link href="<c:url value="/resources/styles.css" />" rel="stylesheet">
     </head>
     <body>
         <h1>Manage Customers</h1>

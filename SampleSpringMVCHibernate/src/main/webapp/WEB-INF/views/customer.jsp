@@ -36,6 +36,12 @@
                     <td><form:input path="address" /></td>
                 </tr>
                 <tr>
+                    <td><form:label path="tel">
+                            <spring:message text="Tel" />
+                        </form:label></td>
+                    <td><form:input path="tel" /></td>
+                </tr>
+                <tr>
                     <td colspan="2"><c:if test="${!empty customer.name}">
                             <input type="submit"
                                    value="<spring:message text="Edit Customer"/>" />
@@ -52,6 +58,7 @@
                 <th width="80">Customer ID</th>
                 <th width="120">Customer Name</th>
                 <th width="120">Customer Address</th>
+                <th width="120">Customer Tel</th>
                 <th width="60">Edit</th>
                 <th width="60">Delete</th>
             </tr>
@@ -61,6 +68,7 @@
                         <td>${customer.id}</td>
                         <td>${customer.name}</td>
                         <td>${customer.address}</td>
+                        <td>${customer.tel}</td>
                         <td><a href="<c:url value='/customer/edit/${customer.id}' />">Edit</a></td>
                         <td><a
                                 href="<c:url value='/customer/remove/${customer.id}' />">Delete</a></td>

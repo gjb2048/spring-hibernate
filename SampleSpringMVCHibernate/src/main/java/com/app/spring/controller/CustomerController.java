@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class CustomerController {
 
-    private CustomerInterface customerService;
-
     @Autowired(required = true)
     @Qualifier(value = "customerService")
+    private CustomerInterface customerService;
+
     public void setCustomerService(CustomerInterface cs) {
         this.customerService = cs;
     }

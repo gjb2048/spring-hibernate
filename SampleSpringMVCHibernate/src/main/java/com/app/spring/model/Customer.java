@@ -17,6 +17,10 @@ import javax.persistence.Table;
 @Table(name = "CUSTOMER")
 public class Customer implements Serializable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -6730983515674294472L;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,6 +63,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "id:" + id + ", name:" + name + ", address:" + address + ", tel=" + tel;
+        return "id:" + id + ", name:" + name + ", address:" + address
+                + ", tel:" + tel;
     }
 }

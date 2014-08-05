@@ -6,8 +6,8 @@
     <head>
         <title>Manage Customer</title>
         <link href="<c:url value="/resources/styles.css" />" rel="stylesheet">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="<c:url value="/resources/bootstrap.min.css" />">
+        <link rel="stylesheet" href="<c:url value="/resources/bootstrap-theme.min.css" />">
     </head>
     <body class="container-fluid">
         <div class="row">

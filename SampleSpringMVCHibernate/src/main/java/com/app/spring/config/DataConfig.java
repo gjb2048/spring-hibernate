@@ -47,8 +47,7 @@ public class DataConfig extends WebMvcConfigurerAdapter {
     }
     
     @Bean
-    @Qualifier(value = "hibernate4AnnotatedSessionFactory")
-    public org.springframework.orm.hibernate4.LocalSessionFactoryBean getSessionFactory() {
+    public org.springframework.orm.hibernate4.LocalSessionFactoryBean hibernate4AnnotatedSessionFactory() {
         org.springframework.orm.hibernate4.LocalSessionFactoryBean sf = new org.springframework.orm.hibernate4.LocalSessionFactoryBean();
         
         sf.setDataSource(getDataSource());
@@ -77,7 +76,7 @@ public class DataConfig extends WebMvcConfigurerAdapter {
         org.springframework.orm.hibernate4.HibernateTransactionManager tm = new org.springframework.orm.hibernate4.HibernateTransactionManager();
 
         // http://stackoverflow.com/questions/20039333/how-to-spring-3-2-hibernate-4-on-javaconfig-correctly
-        tm.setSessionFactory(getSessionFactory().getObject());
+        tm.setSessionFactory(hibernate4AnnotatedSessionFactory().getObject());
 
         return tm;
     }

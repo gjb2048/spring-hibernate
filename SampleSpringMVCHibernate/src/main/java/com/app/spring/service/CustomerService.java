@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Qualifier(value = "customerService")
+@Transactional
 public class CustomerService implements CustomerInterface {
 
     @Autowired
@@ -17,31 +18,26 @@ public class CustomerService implements CustomerInterface {
     private CustomerInterface customerDAO;
 
     @Override
-    @Transactional
     public void addCustomer(Customer c) {
         this.customerDAO.addCustomer(c);
     }
 
     @Override
-    @Transactional
     public void updateCustomer(Customer c) {
         this.customerDAO.updateCustomer(c);
     }
 
     @Override
-    @Transactional
     public List<Customer> listCustomers() {
         return this.customerDAO.listCustomers();
     }
 
     @Override
-    @Transactional
     public Customer getCustomerById(int id) {
         return this.customerDAO.getCustomerById(id);
     }
 
     @Override
-    @Transactional
     public void removeCustomer(int id) {
         this.customerDAO.removeCustomer(id);
     }

@@ -2,11 +2,11 @@ package com.app.spring.config;
 
 import java.util.Properties;
 import javax.sql.DataSource;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -20,8 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  */
 @Configuration
 @EnableTransactionManagement
-@PropertySource({ "classpath:sql.properties" })
-//@ImportResource("classpath:root-context.xml") 
+@PropertySource({"classpath:sql.properties"})
 public class DataConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
@@ -45,38 +44,38 @@ public class DataConfig extends WebMvcConfigurerAdapter {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Bean
-    public org.springframework.orm.hibernate4.LocalSessionFactoryBean hibernate4AnnotatedSessionFactory() {
-        org.springframework.orm.hibernate4.LocalSessionFactoryBean sf = new org.springframework.orm.hibernate4.LocalSessionFactoryBean();
-        
+    public LocalSessionFactoryBean sessionFactory() {
+        LocalSessionFactoryBean sf = new LocalSessionFactoryBean();
+
         sf.setDataSource(getDataSource());
         sf.setAnnotatedClasses(getAnnotatedClasses());
         sf.setHibernateProperties(getHibernateProperties());
-        
+
         return sf;
     }
-    
+
     private Class<?> getAnnotatedClasses() {
         return com.app.spring.model.Customer.class;
     }
-    
+
     private Properties getHibernateProperties() {
         Properties props = new Properties();
-        
+
         props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         props.setProperty("hibernate.show_sql", "true");
         props.setProperty("hibernate.hbm2ddl.auto", "update");
-        
+
         return props;
     }
 
     @Bean
-    public org.springframework.orm.hibernate4.HibernateTransactionManager getTransactionManager() {
-        org.springframework.orm.hibernate4.HibernateTransactionManager tm = new org.springframework.orm.hibernate4.HibernateTransactionManager();
+    public HibernateTransactionManager transactionManager() {
+        HibernateTransactionManager tm = new HibernateTransactionManager();
 
         // http://stackoverflow.com/questions/20039333/how-to-spring-3-2-hibernate-4-on-javaconfig-correctly
-        tm.setSessionFactory(hibernate4AnnotatedSessionFactory().getObject());
+        tm.setSessionFactory(sessionFactory().getObject());
 
         return tm;
     }

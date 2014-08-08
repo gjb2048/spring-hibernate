@@ -17,7 +17,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class JspConfig extends WebMvcConfigurerAdapter {
 
     // Maps resources path to webapp/resources
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
@@ -26,10 +25,10 @@ public class JspConfig extends WebMvcConfigurerAdapter {
     @Bean
     org.springframework.web.servlet.view.InternalResourceViewResolver templateResolver() {
         org.springframework.web.servlet.view.InternalResourceViewResolver tr = new org.springframework.web.servlet.view.InternalResourceViewResolver();
-        
+
         tr.setPrefix("/WEB-INF/views/");
         tr.setSuffix(".jsp");
-        
+
         return tr;
-    }    
+    }
 }

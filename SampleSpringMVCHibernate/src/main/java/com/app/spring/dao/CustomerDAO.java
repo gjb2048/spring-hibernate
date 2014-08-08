@@ -24,7 +24,7 @@ public class CustomerDAO implements CustomerInterface {
     private static final Logger logger = LoggerFactory.getLogger(CustomerDAO.class);
 
     @Inject
-    @Named("hibernate4AnnotatedSessionFactory")
+    @Named("sessionFactory")
     private SessionFactory sessionFactory;
 
     public void setSessionFactory(SessionFactory sf) {

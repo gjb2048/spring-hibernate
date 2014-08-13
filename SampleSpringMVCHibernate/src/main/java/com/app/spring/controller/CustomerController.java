@@ -2,7 +2,6 @@ package com.app.spring.controller;
 
 import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
-import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -21,12 +20,6 @@ public class CustomerController {
 
     public void setCustomerService(CustomerInterface cs) {
         this.customerService = cs;
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String index(Model model) {
-        model.addAttribute("datetime", new Date());
-        return "index";
     }
 
     @RequestMapping(value = "/customers", method = RequestMethod.GET)

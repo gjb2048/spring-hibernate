@@ -2,17 +2,27 @@ package com.app.spring.controller;
 
 import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
+import com.app.spring.util.CustomerNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class CustomerController {
+
+        private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @Autowired(required = true)
     @Qualifier(value = "customerService")
@@ -46,10 +56,22 @@ public class CustomerController {
     }
 
     @RequestMapping("/customer/remove/{id}")
-    public String removeCustomer(@PathVariable("id") int id) {
-
+    public String removeCustomer(@PathVariable("id") int id) throws CustomerNotFoundException {
         this.customerService.removeCustomer(id);
         return "redirect:/customers";
+    }
+
+    @ExceptionHandler(CustomerNotFoundException.class)
+    //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No such customer")  // 404
+    public ModelAndView handleCustomerNotFoundException(HttpServletRequest req, CustomerNotFoundException exception) {
+        logger.error("CustomerNotFoundException: "+req.getRequestURI() + ", customer id: " + exception.getCustomerId());
+        
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception", exception);
+        mav.addObject("exceptionMessage", exception.getMessage());
+        mav.addObject("url", req.getRequestURL());
+        mav.setViewName("error");
+        return mav;
     }
 
     @RequestMapping("/customer/edit/{id}")

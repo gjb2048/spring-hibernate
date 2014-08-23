@@ -2,6 +2,7 @@ package com.app.spring.dao;
 
 import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
+import com.app.spring.util.CustomerNotFoundException;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -65,11 +66,17 @@ public class CustomerDAO implements CustomerInterface {
     }
 
     @Override
-    public void removeCustomer(int id) {
+    public void removeCustomer(int id) throws CustomerNotFoundException {
         Session session = this.sessionFactory.getCurrentSession();
         Customer c = (Customer) session.load(Customer.class, new Integer(id));
         if (null != c) {
-            session.delete(c);
+            try {
+                session.delete(c);
+            } catch (org.hibernate.ObjectNotFoundException ex) {
+                throw new CustomerNotFoundException(id);
+            }
+        } else {
+            throw new CustomerNotFoundException(id);
         }
         logger.info("Customer deleted successfully, Customer details=" + c);
     }

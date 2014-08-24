@@ -48,6 +48,7 @@ public class JspConfig extends WebMvcConfigurerAdapter {
     
     // TODO possibly: http://steveliles.github.io/configuring_global_exception_handling_in_spring_mvc.html
     
+    /* Possibly pre Servlet 3.0 technology? */
     /*
     @Bean(name = "simpleMappingExceptionResolver")
     public SimpleMappingExceptionResolver exceptionResolver() {
@@ -70,10 +71,10 @@ public class JspConfig extends WebMvcConfigurerAdapter {
         exceptionResolver.setStatusCodes(statusCodes);
         
         exceptionResolver.setDefaultErrorView("error");
-        
+
         return exceptionResolver;
     }
-    */
+    /* */
     
     @Bean
     org.springframework.web.servlet.view.InternalResourceViewResolver templateResolver() {

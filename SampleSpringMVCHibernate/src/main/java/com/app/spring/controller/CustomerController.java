@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class CustomerController {
 
-        private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
 
     @Autowired(required = true)
     @Qualifier(value = "customerService")
@@ -62,8 +62,8 @@ public class CustomerController {
     @ExceptionHandler(CustomerNotFoundException.class)
     //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No such customer")  // 404
     public ModelAndView handleCustomerNotFoundException(HttpServletRequest req, CustomerNotFoundException exception) {
-        logger.error("CustomerNotFoundException: "+req.getRequestURI() + ", customer id: " + exception.getCustomerId());
-        
+        logger.error("CustomerNotFoundException: " + req.getRequestURI() + ", customer id: " + exception.getCustomerId());
+
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", exception);
         mav.addObject("exceptionMessage", exception.getMessage());

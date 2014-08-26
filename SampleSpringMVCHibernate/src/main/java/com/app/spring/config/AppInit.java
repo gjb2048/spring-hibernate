@@ -35,7 +35,7 @@ public class AppInit implements WebApplicationInitializer {
         servletContext.addListener(new ContextLoaderListener(rootContext));
 
         AnnotationConfigWebApplicationContext servContext = new AnnotationConfigWebApplicationContext();
-        servContext.register(JspConfig.class);
+        servContext.register(WebConfig.class);
         servContext.setDisplayName("Sample Spring MVC Hibernate Servlet");
 
         //Dispatcher servlet

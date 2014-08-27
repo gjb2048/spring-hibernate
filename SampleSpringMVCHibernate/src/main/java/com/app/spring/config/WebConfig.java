@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * @author Gareth
  */
 @Configuration
-@ComponentScan(basePackages = {"com.app.spring.controller", "com.app.spring.service", "com.app.spring.model", "com.app.spring.dao", "com.app.spring.config"})
+@ComponentScan(basePackages = {"com.app.spring.controller"})
 @EnableWebMvc
 public class WebConfig extends WebMvcConfigurerAdapter {
 

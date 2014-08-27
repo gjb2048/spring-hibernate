@@ -6,6 +6,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
  * http://krams915.blogspot.co.uk/2012/12/spring-and-thymeleaf-with-javaconfig_8540.html
  */
 @Configuration
+@ComponentScan(basePackages = {"com.app.spring.model", "com.app.spring.dao"})
 @EnableTransactionManagement
 @PropertySource({"classpath:sql.properties"})
 public class DataConfig extends WebMvcConfigurerAdapter {

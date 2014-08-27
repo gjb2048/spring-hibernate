@@ -1,17 +1,27 @@
 package com.app.spring.test.controller;
 
+import com.app.spring.config.DataConfig;
 import com.app.spring.config.WebConfig;
-import com.app.spring.service.CustomerService;
+import com.app.spring.model.Customer;
+import com.app.spring.model.CustomerInterface;
 import com.app.spring.test.config.TestConfig;
+import java.util.Arrays;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -24,15 +34,20 @@ import org.springframework.web.context.WebApplicationContext;
  * @author Gareth
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, WebConfig.class})
+@ContextConfiguration(classes = {TestConfig.class, WebConfig.class, DataConfig.class})
 @WebAppConfiguration
 public class CustomerControllerTest {
 
     private MockMvc mockMvc;
 
-    //@Autowired
-    private CustomerService customerServiceMock = Mockito.mock(CustomerService.class);
+    @Autowired(required = true)
+    @Qualifier(value = "customerService")
+    //@Mock
+    private CustomerInterface customerServiceMock;
 
+    //@InjectMocks
+    //private CustomerController customerController;
+    
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -44,10 +59,53 @@ public class CustomerControllerTest {
         Mockito.reset(customerServiceMock);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        
+        // Ref: http://www.zjhzxhz.com/2014/05/unit-testing-of-spring-mvc-controllers/
+        //MockitoAnnotations.initMocks(this);
+        //mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
     }
-    
+
     @Test
-    public void listCustomersTest() {        
-        assert(true);
-    }    
+    public void listCustomersTest() throws Exception {
+        Customer one = new Customer();
+        one.setId(1);
+        one.setName("Fred Flintstone");
+        one.setAddress("12 Bedrock");
+        one.setTel("0800 RUBBLE");
+
+        Customer two = new Customer();
+        two.setId(2);
+        two.setName("Betty Rubble");
+        two.setAddress("14 Bedrock");
+        two.setTel("0800 STONE");
+
+        when(customerServiceMock.listCustomers()).thenReturn(Arrays.asList(one, two));
+
+        mockMvc.perform(get("/customers"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("customer"))
+                .andExpect(forwardedUrl("/WEB-INF/views/customer.jsp"))
+                .andExpect(model().attribute("listCustomers", hasSize(2)))
+                .andExpect(model().attribute("listCustomers", hasItem(
+                                        allOf(
+                                                hasProperty("id", is(1)),
+                                                hasProperty("name", is("Fred Flintstone")),
+                                                hasProperty("address", is("12 Bedrock")),
+                                                hasProperty("tel", is("0800 RUBBLE"))
+                                        )
+                                )))
+                .andExpect(model().attribute("listCustomers", hasItem(
+                                        allOf(
+                                                hasProperty("id", is(2)),
+                                                hasProperty("name", is("Betty Rubble")),
+                                                hasProperty("address", is("14 Bedrock")),
+                                                hasProperty("tel", is("0800 STONE"))
+                                        )
+                                )));
+
+        verify(customerServiceMock, times(1)).listCustomers();
+        //verifyNoMoreInteractions(customerServiceMock);  // Fails?
+
+        //assert(true);
+    }
 }

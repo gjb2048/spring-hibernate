@@ -1,7 +1,6 @@
 package com.app.spring.test.config;
 
 import com.app.spring.model.CustomerInterface;
-import com.app.spring.service.CustomerService;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +18,6 @@ public class TestConfig {
     @Bean
     @Qualifier(value = "customerService")
     CustomerInterface customerInterface() {
-        return Mockito.mock(CustomerService.class);
+        return Mockito.mock(CustomerInterface.class);
     }
 }

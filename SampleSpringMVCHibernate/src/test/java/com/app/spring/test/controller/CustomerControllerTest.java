@@ -34,7 +34,7 @@ import org.springframework.web.context.WebApplicationContext;
  * @author Gareth
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, WebConfig.class, DataConfig.class})
+@ContextConfiguration(classes = {TestConfig.class, WebConfig.class})
 @WebAppConfiguration
 public class CustomerControllerTest {
 

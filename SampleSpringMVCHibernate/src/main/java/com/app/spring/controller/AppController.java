@@ -1,6 +1,7 @@
 package com.app.spring.controller;
 
 import com.app.spring.util.AppException;
+import com.app.spring.util.Utils;
 import java.text.MessageFormat;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
@@ -57,12 +58,9 @@ public class AppController {
 
         AppException exception = new AppException(message, null);
 
-        mav.addObject("exception", exception);
-        mav.addObject("exceptionMessage", message);
-        mav.addObject("cause", exception.getCause());
-        mav.addObject("url", request.getRequestURI());
-        mav.setViewName("error_404");
-        return mav;
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+        return Utils.getErrorMAV(request, exception, "error_404");
     }
     
     @RequestMapping({"error", "/error"})
@@ -87,12 +85,9 @@ public class AppController {
 
         AppException exception = new AppException(message, null);
 
-        mav.addObject("exception", exception);
-        mav.addObject("exceptionMessage", message);
-        mav.addObject("cause", exception.getCause());
-        mav.addObject("url", request.getRequestURI());
-        mav.setViewName("error");
-        return mav;
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+
+        return Utils.getErrorMAV(request, exception, "error");
     }
 
     private String getExceptionMessage(Throwable throwable, Integer statusCode) {

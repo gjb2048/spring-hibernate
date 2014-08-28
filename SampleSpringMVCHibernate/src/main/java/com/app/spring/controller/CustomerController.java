@@ -3,11 +3,14 @@ package com.app.spring.controller;
 import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
 import com.app.spring.util.CustomerNotFoundException;
+import com.app.spring.util.Utils;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -61,16 +64,12 @@ public class CustomerController {
 
     @ExceptionHandler(CustomerNotFoundException.class)
     //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No such customer")  // 404
-    public ModelAndView handleCustomerNotFoundException(HttpServletRequest req, CustomerNotFoundException exception) {
+    public ModelAndView handleCustomerNotFoundException(HttpServletRequest req, HttpServletResponse resp, CustomerNotFoundException exception) {
         logger.error("CustomerNotFoundException: " + req.getRequestURI() + ", customer id: " + exception.getCustomerId());
 
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", exception);
-        mav.addObject("exceptionMessage", exception.getMessage());
-        mav.addObject("cause", exception.getCause());
-        mav.addObject("url", req.getRequestURL());
-        mav.setViewName("error_404");
-        return mav;
+        resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+        return Utils.getErrorMAV(req, exception, "error_404");
     }
 
     @RequestMapping("/customer/edit/{id}")

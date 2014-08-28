@@ -1,18 +1,24 @@
 package com.app.spring.test.controller;
 
-import com.app.spring.config.DataConfig;
 import com.app.spring.config.WebConfig;
 import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
 import com.app.spring.test.config.TestConfig;
+import com.app.spring.util.CustomerNotFoundException;
 import java.util.Arrays;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,8 +26,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -47,7 +55,6 @@ public class CustomerControllerTest {
 
     //@InjectMocks
     //private CustomerController customerController;
-    
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -59,7 +66,7 @@ public class CustomerControllerTest {
         Mockito.reset(customerServiceMock);
 
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        
+
         // Ref: http://www.zjhzxhz.com/2014/05/unit-testing-of-spring-mvc-controllers/
         //MockitoAnnotations.initMocks(this);
         //mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
@@ -104,8 +111,27 @@ public class CustomerControllerTest {
                                 )));
 
         verify(customerServiceMock, times(1)).listCustomers();
-        //verifyNoMoreInteractions(customerServiceMock);  // Fails?
-
-        //assert(true);
+        verifyNoMoreInteractions(customerServiceMock);
     }
+
+    @Test
+    public void editUnknownCustomerTest() throws Exception {
+        when(customerServiceMock.getCustomerById(42)).thenThrow(new CustomerNotFoundException(42, new Exception("editUnknownCustomerTest()")));
+
+        mockMvc.perform(get("/customer/edit/{id}", 42))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("error_404"))
+                .andExpect(forwardedUrl("/WEB-INF/views/error_404.jsp"));
+
+        verify(customerServiceMock, times(1)).getCustomerById(42);
+        verifyNoMoreInteractions(customerServiceMock);
+    }
+
+    @Test
+    public void unknownUrlTest() throws Exception {
+        mockMvc.perform(get("/rimmer"))
+                .andExpect(status().isOk()); // Odd, should be 404 and is when tested in browser with app.  Should this really test the AppController?
+        verifyNoMoreInteractions(customerServiceMock);
+    }
+
 }

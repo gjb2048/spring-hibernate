@@ -2,6 +2,7 @@ package com.app.spring.service;
 
 import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
+import com.app.spring.util.CustomerNotFoundException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,12 +34,12 @@ public class CustomerService implements CustomerInterface {
     }
 
     @Override
-    public Customer getCustomerById(int id) {
+    public Customer getCustomerById(int id) throws CustomerNotFoundException {
         return this.customerDAO.getCustomerById(id);
     }
 
     @Override
-    public void removeCustomer(int id) {
+    public void removeCustomer(int id) throws CustomerNotFoundException {
         this.customerDAO.removeCustomer(id);
     }
 

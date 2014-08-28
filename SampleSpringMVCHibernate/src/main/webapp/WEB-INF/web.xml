@@ -5,6 +5,10 @@
     Humm: https://tomcat.apache.org/tomcat-7.0-doc/api/org/apache/catalina/startup/Tomcat.html#addContext(java.lang.String, java.lang.String)
     -->
     <error-page>
+        <error-code>404</error-code>
+        <location>/error_404</location>
+    </error-page>
+    <error-page>
         <location>/error</location>
     </error-page>
 </web-app>

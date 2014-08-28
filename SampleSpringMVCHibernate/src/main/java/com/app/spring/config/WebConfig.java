@@ -2,6 +2,7 @@ package com.app.spring.config;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 /**
  *
@@ -46,32 +48,31 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     // TODO possibly: http://steveliles.github.io/configuring_global_exception_handling_in_spring_mvc.html
     /* Possibly pre Servlet 3.0 technology? */
-    /*
-     @Bean(name = "simpleMappingExceptionResolver")
-     public SimpleMappingExceptionResolver exceptionResolver() {
-     // http://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc/
-     SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
-        
-     Properties exceptionMappings = new Properties();
-        
-     exceptionMappings.put("com.app.spring.util.AppException", "error/404");
-     exceptionMappings.put("java.lang.Exception", "error/error");
-     exceptionMappings.put("java.lang.RuntimeException", "error/error");
-        
-     exceptionResolver.setExceptionMappings(exceptionMappings);
-        
-     Properties statusCodes = new Properties();
-        
-     statusCodes.put("error/404", "404");
-     statusCodes.put("error/error", "500");
-        
-     exceptionResolver.setStatusCodes(statusCodes);
-        
-     exceptionResolver.setDefaultErrorView("error");
+    @Bean(name = "simpleMappingExceptionResolver")
+    public SimpleMappingExceptionResolver exceptionResolver() {
+        // http://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc/
+        SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
 
-     return exceptionResolver;
-     }
-     /* */
+        Properties exceptionMappings = new Properties();
+
+        exceptionMappings.put("com.app.spring.util.AppException", "error_404");
+        exceptionMappings.put("java.lang.Exception", "error");
+        exceptionMappings.put("java.lang.RuntimeException", "error");
+
+        exceptionResolver.setExceptionMappings(exceptionMappings);
+
+        Properties statusCodes = new Properties();
+
+        statusCodes.put("error_404", "404");
+        statusCodes.put("error", "500");
+
+        exceptionResolver.setStatusCodes(statusCodes);
+
+        exceptionResolver.setDefaultErrorView("error");
+
+        return exceptionResolver;
+    }
+
     @Bean
     org.springframework.web.servlet.view.InternalResourceViewResolver templateResolver() {
         org.springframework.web.servlet.view.InternalResourceViewResolver tr = new org.springframework.web.servlet.view.InternalResourceViewResolver();

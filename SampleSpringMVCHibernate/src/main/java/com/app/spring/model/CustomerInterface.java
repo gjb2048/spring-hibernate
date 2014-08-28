@@ -1,5 +1,6 @@
 package com.app.spring.model;
 
+import com.app.spring.util.CustomerNotFoundException;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public interface CustomerInterface {
 
     public List<Customer> listCustomers();
 
-    public Customer getCustomerById(int id);
+    public Customer getCustomerById(int id) throws CustomerNotFoundException;
 
-    public void removeCustomer(int id);
+    public void removeCustomer(int id) throws CustomerNotFoundException;
 }

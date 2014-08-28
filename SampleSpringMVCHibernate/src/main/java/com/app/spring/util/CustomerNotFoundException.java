@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author Gareth
  */
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class CustomerNotFoundException extends RuntimeException {
+public class CustomerNotFoundException extends AppException {
     // http://www.javabeat.net/spring-mvc-404-error-page/
 
     private final int customerId;
 
-    public CustomerNotFoundException(int cid) {
-        super();
+    public CustomerNotFoundException(int cid, Exception cause) {
+        super("Customer " + cid + " not found.", cause);
         this.customerId = cid;
     }
 

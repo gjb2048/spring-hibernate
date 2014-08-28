@@ -1,5 +1,6 @@
 package com.app.spring.controller;
 
+import com.app.spring.util.AppException;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,13 +20,14 @@ public class AppControllerExceptionHandler {
     // Total control - setup a model and return the view name yourself. Or consider
     // subclassing ExceptionHandlerExceptionResolver (see below).
 
-    @ExceptionHandler(Exception.class)
-    public ModelAndView handleError(HttpServletRequest req, Exception exception) {
+    @ExceptionHandler(AppException.class)
+    public ModelAndView handleError(HttpServletRequest req, AppException exception) {
         logger.error("Request: " + req.getRequestURL() + " raised " + exception);
 
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", exception);
         mav.addObject("exceptionMessage", exception.getMessage());
+        mav.addObject("cause", exception.getCause());
         mav.addObject("url", req.getRequestURL());
         mav.setViewName("error");
         return mav;

@@ -67,13 +67,14 @@ public class CustomerController {
         ModelAndView mav = new ModelAndView();
         mav.addObject("exception", exception);
         mav.addObject("exceptionMessage", exception.getMessage());
+        mav.addObject("cause", exception.getCause());
         mav.addObject("url", req.getRequestURL());
-        mav.setViewName("error");
+        mav.setViewName("error_404");
         return mav;
     }
 
     @RequestMapping("/customer/edit/{id}")
-    public String editCustomer(@PathVariable("id") int id, Model model) {
+    public String editCustomer(@PathVariable("id") int id, Model model) throws CustomerNotFoundException {
         model.addAttribute("customer", this.customerService.getCustomerById(id));
         model.addAttribute("listCustomers", this.customerService.listCustomers());
         return "customer";

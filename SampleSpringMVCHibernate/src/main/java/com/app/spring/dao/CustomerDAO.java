@@ -58,9 +58,25 @@ public class CustomerDAO implements CustomerInterface {
     }
 
     @Override
-    public Customer getCustomerById(int id) {
+    public Customer getCustomerById(int id) throws CustomerNotFoundException {
         Session session = this.sessionFactory.getCurrentSession();
-        Customer c = (Customer) session.load(Customer.class, new Integer(id));
+        Object o = session.load(Customer.class, id);
+
+        if ((o == null) || (o.getClass() != Customer.class)) {
+            Exception ex = null;
+            try
+            {
+              // Extract the exception.
+                Customer cs = (Customer) o;
+                cs.getId();
+            } catch (org.hibernate.ObjectNotFoundException e) {
+                ex = e;
+            }
+            throw new CustomerNotFoundException(id, ex);
+        }
+
+        Customer c = (Customer) o;
+        
         logger.info("Customer loaded successfully, Customer details=" + c);
         return c;
     }
@@ -73,10 +89,10 @@ public class CustomerDAO implements CustomerInterface {
             try {
                 session.delete(c);
             } catch (org.hibernate.ObjectNotFoundException ex) {
-                throw new CustomerNotFoundException(id);
+                throw new CustomerNotFoundException(id, ex);
             }
         } else {
-            throw new CustomerNotFoundException(id);
+            throw new CustomerNotFoundException(id, null);
         }
         logger.info("Customer deleted successfully, Customer details=" + c);
     }

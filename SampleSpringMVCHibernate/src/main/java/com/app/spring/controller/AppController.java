@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -38,8 +37,36 @@ public class AppController {
         return "refs";
     }
 
-    @RequestMapping({"error", "/error",/* "/**" */})
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "The page was not found, oops!")
+    @RequestMapping({"error_404", "/error_404"})
+    public ModelAndView custom404Error(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+        // http://www.javacodegeeks.com/2013/11/how-to-custom-error-pages-in-tomcat-with-spring-mvc.html
+        // http://blog.codeleak.pl/2013/04/how-to-custom-error-pages-in-tomcat.html
+        // retrieve some useful information from the request
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
+        String exceptionMessage = getExceptionMessage(throwable, statusCode);
+
+        String requestUri = (String) request.getAttribute("javax.servlet.error.request_uri");
+        if (requestUri == null) {
+            requestUri = "Unknown";
+        }
+
+        String message = MessageFormat.format("{0} returned for {1} with message {2}",
+                statusCode, requestUri, exceptionMessage
+        );
+
+        AppException exception = new AppException(message, null);
+
+        mav.addObject("exception", exception);
+        mav.addObject("exceptionMessage", message);
+        mav.addObject("cause", exception.getCause());
+        mav.addObject("url", request.getRequestURI());
+        mav.setViewName("error_404");
+        return mav;
+    }
+    
+    @RequestMapping({"error", "/error"})
+    //@ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "The page was not found, oops!")
     public ModelAndView customError(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
         // http://www.javacodegeeks.com/2013/11/how-to-custom-error-pages-in-tomcat-with-spring-mvc.html
         // http://blog.codeleak.pl/2013/04/how-to-custom-error-pages-in-tomcat.html
@@ -58,14 +85,14 @@ public class AppController {
                 statusCode, requestUri, exceptionMessage
         );
 
-        AppException exception = new AppException(message);
+        AppException exception = new AppException(message, null);
 
         mav.addObject("exception", exception);
         mav.addObject("exceptionMessage", message);
+        mav.addObject("cause", exception.getCause());
         mav.addObject("url", request.getRequestURI());
         mav.setViewName("error");
         return mav;
-
     }
 
     private String getExceptionMessage(Throwable throwable, Integer statusCode) {

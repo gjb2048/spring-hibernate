@@ -68,7 +68,7 @@ public class DataConfig extends WebMvcConfigurerAdapter {
 
         props.setProperty("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
         props.setProperty("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
-        props.setProperty("hibernate.hbm2ddl.auto", env.getRequiredProperty("hbm2ddl.auto"));
+        props.setProperty("hibernate.hbm2ddl.auto", env.getRequiredProperty("hibernate.hbm2ddl.auto"));
 
         return props;
     }

@@ -1,5 +1,6 @@
 package com.app.spring.config;
 
+import com.app.spring.util.AppExceptionResolver;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -48,9 +49,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     // TODO possibly: http://steveliles.github.io/configuring_global_exception_handling_in_spring_mvc.html
     @Bean(name = "simpleMappingExceptionResolver")
-    public SimpleMappingExceptionResolver exceptionResolver() {
+    public AppExceptionResolver exceptionResolver() {
         // Ref: http://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc/
-        SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
+        // This is the fallback after @ExceptionHandler and then @ResponseStatus have not been defined for an error.
+        AppExceptionResolver exceptionResolver = new AppExceptionResolver();
 
         Properties exceptionMappings = new Properties();
 

@@ -25,17 +25,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @PropertySource({"classpath:sql.properties"})
 public class DataConfig extends WebMvcConfigurerAdapter {
 
-    @Autowired
+    @Autowired // Another example has this as @Resource but @PropertySource on Spring docs has as @Autowired
     private Environment env;
 
     @Bean
-    public DataSource getDataSource() {
+    public DataSource dataSource() {
         try {
             org.apache.commons.dbcp.BasicDataSource ds = new org.apache.commons.dbcp.BasicDataSource();
             ds.setDriverClassName(env.getRequiredProperty("app.jdbc.driverClassName"));
             ds.setUrl(env.getRequiredProperty("app.jdbc.url"));
             ds.setUsername(env.getRequiredProperty("app.jdbc.username"));
             ds.setPassword(env.getRequiredProperty("app.jdbc.password"));
+            // Below applies if using a connection pool data source.
             //ds.setAcquireIncrement(5);
             //ds.setIdleConnectionTestPeriod(60);
             //ds.setMaxPoolSize(100);
@@ -51,9 +52,9 @@ public class DataConfig extends WebMvcConfigurerAdapter {
     public LocalSessionFactoryBean sessionFactory() {
         LocalSessionFactoryBean sf = new LocalSessionFactoryBean();
 
-        sf.setDataSource(getDataSource());
+        sf.setDataSource(dataSource());
         sf.setAnnotatedClasses(getAnnotatedClasses());
-        sf.setHibernateProperties(getHibernateProperties());
+        sf.setHibernateProperties(hibernateProperties());
 
         return sf;
     }
@@ -62,12 +63,12 @@ public class DataConfig extends WebMvcConfigurerAdapter {
         return com.app.spring.model.Customer.class;
     }
 
-    private Properties getHibernateProperties() {
+    private Properties hibernateProperties() {
         Properties props = new Properties();
 
-        props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        props.setProperty("hibernate.show_sql", "true");
-        props.setProperty("hibernate.hbm2ddl.auto", "update");
+        props.setProperty("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
+        props.setProperty("hibernate.show_sql", env.getRequiredProperty("hibernate.show_sql"));
+        props.setProperty("hibernate.hbm2ddl.auto", env.getRequiredProperty("hbm2ddl.auto"));
 
         return props;
     }

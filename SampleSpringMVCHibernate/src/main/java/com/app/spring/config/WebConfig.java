@@ -47,10 +47,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     // TODO possibly: http://steveliles.github.io/configuring_global_exception_handling_in_spring_mvc.html
-    /* Possibly pre Servlet 3.0 technology? */
     @Bean(name = "simpleMappingExceptionResolver")
     public SimpleMappingExceptionResolver exceptionResolver() {
-        // http://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc/
+        // Ref: http://spring.io/blog/2013/11/01/exception-handling-in-spring-mvc/
         SimpleMappingExceptionResolver exceptionResolver = new SimpleMappingExceptionResolver();
 
         Properties exceptionMappings = new Properties();

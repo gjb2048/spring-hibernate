@@ -63,38 +63,6 @@ public class Customer implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        boolean retr = true;
-
-        if (obj.getClass() == Customer.class) {
-            Customer them = (Customer) obj;
-            if (them.id != this.id) {
-                retr = false;
-            } else if (them.address.equalsIgnoreCase(this.address) == false) {
-                retr = false;
-            } else if (them.name.equalsIgnoreCase(this.name) == false) {
-                retr = false;
-            } else if (them.tel.equalsIgnoreCase(this.tel) == false) {
-                retr = false;
-            }
-        } else {
-            retr = false;
-        }
-
-        return retr;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 97 * hash + this.id;
-        hash = 97 * hash + Objects.hashCode(this.name);
-        hash = 97 * hash + Objects.hashCode(this.address);
-        hash = 97 * hash + Objects.hashCode(this.tel);
-        return hash;
-    }
-
-    @Override
     public String toString() {
         return "id:" + id + ", name:" + name + ", address:" + address
                 + ", tel:" + tel;

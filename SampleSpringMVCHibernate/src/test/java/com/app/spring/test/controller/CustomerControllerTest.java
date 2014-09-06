@@ -6,6 +6,14 @@ import com.app.spring.model.CustomerInterface;
 import com.app.spring.test.config.TestConfig;
 import com.app.spring.util.CustomerNotFoundException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.allOf;
@@ -14,22 +22,48 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import static org.mockito.Matchers.same;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verify;
@@ -156,25 +190,6 @@ public class CustomerControllerTest {
         add.setAddress("12 Bedrock");
         add.setTel("0800 RUBBLE");
 
-        // Looked at: http://kevinpotgieter.wordpress.com/2012/07/19/stubbing-void-methods-with-mockito/.
-        //Mockito.doNothing().when(customerServiceMock).addCustomer(eq(add));
-        // And: http://www.planetgeek.ch/2010/07/20/mockito-answer-vs-return/
-        /*
-         doAnswer(new Answer<Customer>() {
-         @Override
-         public Customer answer(InvocationOnMock invocation) throws Throwable {
-         Customer cust = (Customer) invocation.getArguments()[0];
-         return cust;
-         }
-         }).when(customerServiceMock).addCustomer(add);
-
-         when(customerServiceMock.getCustomerById(add.getId())).thenAnswer(new Answer<Customer>() {
-         @Override
-         public Customer answer(InvocationOnMock invocation) throws Throwable {
-         return add;
-         }
-         });
-         */
         ResultActions result = mockMvc.perform(post("/customer/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id", String.valueOf(add.getId()))
@@ -186,18 +201,41 @@ public class CustomerControllerTest {
                 .andExpect(view().name("redirect:/customers"))
                 .andExpect(redirectedUrl("/customers"));
         
-        //verify(customerServiceMock, times(1)).addCustomer(add);
-        // Bingo ish! -> http://www.hascode.com/2011/03/mocking-stubbing-and-test-spying-using-the-mockito-framework/
-        // But... not quite! Eventually solved by overriding the equals method of the Customer class to provide an equality test which did not take into account the objects instance reference.
-        // Humm, just discovered ArgumentCaptor so will try that without the equality override.
-        verify(customerServiceMock, times(1)).addCustomer(add);
+        //result.andExpect(model().attribute("customer", is(add)));
+
+        System.out.println("addCustomerTest() - Model objects start.");
+        Map<String, Object> viewObjects = result.andReturn().getModelAndView().getModel();
+        System.out.println("addCustomerTest() - Model objects keys start.");
+        Iterator<String> itvk = viewObjects.keySet().iterator();
+        while (itvk.hasNext()) {
+            System.out.println(itvk.next());
+        }
+        System.out.println("addCustomerTest() - Model objects keys end.");
+        System.out.println("addCustomerTest() - Model objects values start.");
+        Iterator<Object> itvo = viewObjects.values().iterator();
+        while (itvo.hasNext()) {
+            System.out.println(itvo.next());
+        }
+        System.out.println("addCustomerTest() - Model objects values end.");
+        System.out.println("addCustomerTest() - Model objects end.");
         
+        Customer modelCust = (Customer) viewObjects.get("customer");
+        assertEquals(add.getId(), modelCust.getId());
+        assertEquals(add.getAddress(), modelCust.getAddress());
+        assertEquals(add.getName(), modelCust.getName());
+        assertEquals(add.getTel(), modelCust.getTel());
+        
+        // Consider: http://docs.mockito.googlecode.com/hg/org/mockito/Captor.html
+        // Consider if Customer compared more than once here: http://docs.mockito.googlecode.com/hg/org/mockito/ArgumentMatcher.html
+        // Ref: http://docs.mockito.googlecode.com/hg/org/mockito/ArgumentCaptor.html and http://www.petrikainulainen.net/programming/spring-framework/unit-testing-of-spring-mvc-controllers-normal-controllers/
         ArgumentCaptor<Customer> formObjectArgument = ArgumentCaptor.forClass(Customer.class);
         verify(customerServiceMock, times(1)).addCustomer(formObjectArgument.capture());
-        
-        assertEquals(add, formObjectArgument.getValue());
-        
-        //assertEquals(add, customerServiceMock.getCustomerById(add.getId()));
         verifyNoMoreInteractions(customerServiceMock);
+
+        Customer them = formObjectArgument.getValue();
+        assertEquals(add.getId(), them.getId());
+        assertEquals(add.getAddress(), them.getAddress());
+        assertEquals(add.getName(), them.getName());
+        assertEquals(add.getTel(), them.getTel());
     }
 }

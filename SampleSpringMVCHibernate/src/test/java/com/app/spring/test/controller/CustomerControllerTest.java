@@ -18,6 +18,8 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItem;
@@ -36,6 +38,8 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasSize;
@@ -52,13 +56,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import static org.mockito.Matchers.same;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verify;
@@ -230,6 +237,7 @@ public class CustomerControllerTest {
         // Ref: http://docs.mockito.googlecode.com/hg/org/mockito/ArgumentCaptor.html and http://www.petrikainulainen.net/programming/spring-framework/unit-testing-of-spring-mvc-controllers-normal-controllers/
         ArgumentCaptor<Customer> formObjectArgument = ArgumentCaptor.forClass(Customer.class);
         verify(customerServiceMock, times(1)).addCustomer(formObjectArgument.capture());
+        verify(customerServiceMock, never()).updateCustomer(formObjectArgument.capture());
         verifyNoMoreInteractions(customerServiceMock);
 
         Customer them = formObjectArgument.getValue();
@@ -237,5 +245,45 @@ public class CustomerControllerTest {
         assertEquals(add.getAddress(), them.getAddress());
         assertEquals(add.getName(), them.getName());
         assertEquals(add.getTel(), them.getTel());
+    }
+
+
+    @Test
+    public void updateCustomerTest() throws Exception {
+        final Customer update = new Customer();
+        update.setId(1);  // Not 0 indicates update.
+        update.setName("Wilma Flintstone");
+        update.setAddress("12 Bedrock");
+        update.setTel("0800 GRANITE");
+
+        ResultActions result = mockMvc.perform(post("/customer/add")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", String.valueOf(update.getId()))
+                .param("name", update.getName())
+                .param("address", update.getAddress())
+                .param("tel", update.getTel()));
+
+        result.andExpect(status().isMovedTemporarily())
+                .andExpect(view().name("redirect:/customers"))
+                .andExpect(redirectedUrl("/customers"));
+        
+        Map<String, Object> viewObjects = result.andReturn().getModelAndView().getModel();
+        
+        Customer modelCust = (Customer) viewObjects.get("customer");
+        assertEquals(update.getId(), modelCust.getId());
+        assertEquals(update.getAddress(), modelCust.getAddress());
+        assertEquals(update.getName(), modelCust.getName());
+        assertEquals(update.getTel(), modelCust.getTel());
+        
+        ArgumentCaptor<Customer> formObjectArgument = ArgumentCaptor.forClass(Customer.class);
+        verify(customerServiceMock, never()).addCustomer(formObjectArgument.capture());
+        verify(customerServiceMock, times(1)).updateCustomer(formObjectArgument.capture());
+        verifyNoMoreInteractions(customerServiceMock);
+
+        Customer them = formObjectArgument.getValue();
+        assertEquals(update.getId(), them.getId());
+        assertEquals(update.getAddress(), them.getAddress());
+        assertEquals(update.getName(), them.getName());
+        assertEquals(update.getTel(), them.getTel());
     }
 }

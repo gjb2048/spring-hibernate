@@ -1,6 +1,7 @@
 package com.app.spring.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -59,6 +60,38 @@ public class Customer implements Serializable {
 
     public void setTel(String tel) {
         this.tel = tel;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean retr = true;
+
+        if (obj.getClass() == Customer.class) {
+            Customer them = (Customer) obj;
+            if (them.id != this.id) {
+                retr = false;
+            } else if (them.address.equalsIgnoreCase(this.address) == false) {
+                retr = false;
+            } else if (them.name.equalsIgnoreCase(this.name) == false) {
+                retr = false;
+            } else if (them.tel.equalsIgnoreCase(this.tel) == false) {
+                retr = false;
+            }
+        } else {
+            retr = false;
+        }
+
+        return retr;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + this.id;
+        hash = 97 * hash + Objects.hashCode(this.name);
+        hash = 97 * hash + Objects.hashCode(this.address);
+        hash = 97 * hash + Objects.hashCode(this.tel);
+        return hash;
     }
 
     @Override

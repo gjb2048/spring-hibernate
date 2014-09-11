@@ -12,6 +12,7 @@
         <org.springframework-version>4.0.6.RELEASE</org.springframework-version>
         <!--org.aspectj-version>1.7.4</org.aspectj-version-->
         <org.slf4j-version>1.7.7</org.slf4j-version>
+        <jackson.version>2.4.0</jackson.version>
         <hibernate.version>4.3.6.Final</hibernate.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -39,6 +40,19 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
             <version>${org.springframework-version}</version>
+        </dependency>
+        
+        <!-- Jackson v2 for JSON in Spring 4, see: -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+ 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 		
         <!-- Hibernate -->

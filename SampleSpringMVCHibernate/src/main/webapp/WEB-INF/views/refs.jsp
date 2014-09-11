@@ -32,6 +32,11 @@
                         <td class="col-sm-9 col-md-9 col-lg-9"><a href="//spring.io/blog/2013/11/01/exception-handling-in-spring-mvc" target="_blank">Exception Handling in Spring MVC</a></td>
                     </tr>
                     <!-- http://www.intertech.com/Blog/understanding-spring-mvc-model-and-session-attributes/ -->
+                    <!-- http://jackson.codehaus.org/ -->
+                    <!-- http://www.programming-free.com/2014/03/spring-mvc-40-restful-web-service-json.html -->
+                    <!-- http://www.mkyong.com/spring-mvc/spring-3-mvc-and-json-example/ -->
+                    <!-- http://xpadro.blogspot.co.uk/2014/01/migrating-spring-mvc-restful-web.html -->
+                    <!-- http://docs.spring.io/spring-roo/reference/html/base-json.html -->
                 </table>
             </div>
         </div>

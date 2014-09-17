@@ -5,75 +5,23 @@ import com.app.spring.model.Customer;
 import com.app.spring.model.CustomerInterface;
 import com.app.spring.test.config.TestConfig;
 import com.app.spring.util.CustomerNotFoundException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import static org.mockito.Matchers.same;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -87,7 +35,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -100,6 +50,8 @@ import org.springframework.web.context.WebApplicationContext;
  * http://www.petrikainulainen.net/programming/spring-framework/unit-testing-of-spring-mvc-controllers-configuration/
  * and
  * http://www.petrikainulainen.net/programming/spring-framework/unit-testing-of-spring-mvc-controllers-normal-controllers/
+ * and
+ * http://www.petrikainulainen.net/programming/spring-framework/unit-testing-of-spring-mvc-controllers-rest-api/
  *
  * @author Gareth
  */
@@ -176,6 +128,47 @@ public class CustomerControllerTest {
         verifyNoMoreInteractions(customerServiceMock);
     }
 
+    private static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(),
+            MediaType.APPLICATION_JSON.getSubtype(),
+            Charset.forName("utf8")
+    );
+
+    @Test
+    public void listCustomersRestTest() throws Exception {
+        Customer one = new Customer();
+        one.setId(1);
+        one.setName("Fred Flintstone");
+        one.setAddress("12 Bedrock");
+        one.setTel("0800 RUBBLE");
+
+        Customer two = new Customer();
+        two.setId(2);
+        two.setName("Betty Rubble");
+        two.setAddress("14 Bedrock");
+        two.setTel("0800 STONE");
+
+        when(customerServiceMock.listCustomers()).thenReturn(Arrays.asList(one, two));
+
+       ResultActions result = mockMvc.perform(get("/customers/rest"));
+       
+       System.out.println("listCustomersRestTest() - " + result.andReturn().getResponse().getContentAsString());
+
+       result.andExpect(status().isOk())
+             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+             .andExpect(jsonPath("$", hasSize(2)))
+             .andExpect(jsonPath("$[0].id", is(1)))
+             .andExpect(jsonPath("$[0].name", is("Fred Flintstone")))
+             .andExpect(jsonPath("$[0].address", is("12 Bedrock")))
+             .andExpect(jsonPath("$[0].tel", is("0800 RUBBLE")))
+             .andExpect(jsonPath("$[1].id", is(2)))
+             .andExpect(jsonPath("$[1].name", is("Betty Rubble")))
+             .andExpect(jsonPath("$[1].address", is("14 Bedrock")))
+             .andExpect(jsonPath("$[1].tel", is("0800 STONE")));
+
+        verify(customerServiceMock, times(1)).listCustomers();
+        verifyNoMoreInteractions(customerServiceMock);
+    }
+
     @Test
     public void editUnknownCustomerTest() throws Exception {
         when(customerServiceMock.getCustomerById(42)).thenThrow(new CustomerNotFoundException(42, new Exception("editUnknownCustomerTest()")));
@@ -207,9 +200,8 @@ public class CustomerControllerTest {
         result.andExpect(status().isMovedTemporarily())
                 .andExpect(view().name("redirect:/customers"))
                 .andExpect(redirectedUrl("/customers"));
-        
-        //result.andExpect(model().attribute("customer", is(add)));
 
+        //result.andExpect(model().attribute("customer", is(add)));
         System.out.println("addCustomerTest() - Model objects start.");
         Map<String, Object> viewObjects = result.andReturn().getModelAndView().getModel();
         System.out.println("addCustomerTest() - Model objects keys start.");
@@ -225,13 +217,13 @@ public class CustomerControllerTest {
         }
         System.out.println("addCustomerTest() - Model objects values end.");
         System.out.println("addCustomerTest() - Model objects end.");
-        
+
         Customer modelCust = (Customer) viewObjects.get("customer");
         assertEquals(add.getId(), modelCust.getId());
         assertEquals(add.getAddress(), modelCust.getAddress());
         assertEquals(add.getName(), modelCust.getName());
         assertEquals(add.getTel(), modelCust.getTel());
-        
+
         // Consider: http://docs.mockito.googlecode.com/hg/org/mockito/Captor.html
         // Consider if Customer compared more than once here: http://docs.mockito.googlecode.com/hg/org/mockito/ArgumentMatcher.html
         // Ref: http://docs.mockito.googlecode.com/hg/org/mockito/ArgumentCaptor.html and http://www.petrikainulainen.net/programming/spring-framework/unit-testing-of-spring-mvc-controllers-normal-controllers/
@@ -246,7 +238,6 @@ public class CustomerControllerTest {
         assertEquals(add.getName(), them.getName());
         assertEquals(add.getTel(), them.getTel());
     }
-
 
     @Test
     public void updateCustomerTest() throws Exception {
@@ -266,15 +257,15 @@ public class CustomerControllerTest {
         result.andExpect(status().isMovedTemporarily())
                 .andExpect(view().name("redirect:/customers"))
                 .andExpect(redirectedUrl("/customers"));
-        
+
         Map<String, Object> viewObjects = result.andReturn().getModelAndView().getModel();
-        
+
         Customer modelCust = (Customer) viewObjects.get("customer");
         assertEquals(update.getId(), modelCust.getId());
         assertEquals(update.getAddress(), modelCust.getAddress());
         assertEquals(update.getName(), modelCust.getName());
         assertEquals(update.getTel(), modelCust.getTel());
-        
+
         ArgumentCaptor<Customer> formObjectArgument = ArgumentCaptor.forClass(Customer.class);
         verify(customerServiceMock, never()).addCustomer(formObjectArgument.capture());
         verify(customerServiceMock, times(1)).updateCustomer(formObjectArgument.capture());

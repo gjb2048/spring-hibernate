@@ -37,6 +37,8 @@
                     <!-- http://www.mkyong.com/spring-mvc/spring-3-mvc-and-json-example/ -->
                     <!-- http://xpadro.blogspot.co.uk/2014/01/migrating-spring-mvc-restful-web.html -->
                     <!-- http://docs.spring.io/spring-roo/reference/html/base-json.html -->
+                    <!-- http://stackoverflow.com/questions/21708339/avoid-jackson-serialization-on-non-fetched-lazy-objects for getcustomers -->
+                    <!-- https://github.com/FasterXML/jackson-datatype-hibernate -->
                 </table>
             </div>
         </div>

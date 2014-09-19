@@ -149,23 +149,63 @@ public class CustomerControllerTest {
 
         when(customerServiceMock.listCustomers()).thenReturn(Arrays.asList(one, two));
 
-       ResultActions result = mockMvc.perform(get("/customers/rest"));
-       
-       System.out.println("listCustomersRestTest() - " + result.andReturn().getResponse().getContentAsString());
+        ResultActions result = mockMvc.perform(get("/customers/rest"));
 
-       result.andExpect(status().isOk())
-             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-             .andExpect(jsonPath("$", hasSize(2)))
-             .andExpect(jsonPath("$[0].id", is(1)))
-             .andExpect(jsonPath("$[0].name", is("Fred Flintstone")))
-             .andExpect(jsonPath("$[0].address", is("12 Bedrock")))
-             .andExpect(jsonPath("$[0].tel", is("0800 RUBBLE")))
-             .andExpect(jsonPath("$[1].id", is(2)))
-             .andExpect(jsonPath("$[1].name", is("Betty Rubble")))
-             .andExpect(jsonPath("$[1].address", is("14 Bedrock")))
-             .andExpect(jsonPath("$[1].tel", is("0800 STONE")));
+        System.out.println("listCustomersRestTest() - " + result.andReturn().getResponse().getContentAsString());
+
+        result.andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("Fred Flintstone")))
+                .andExpect(jsonPath("$[0].address", is("12 Bedrock")))
+                .andExpect(jsonPath("$[0].tel", is("0800 RUBBLE")))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].name", is("Betty Rubble")))
+                .andExpect(jsonPath("$[1].address", is("14 Bedrock")))
+                .andExpect(jsonPath("$[1].tel", is("0800 STONE")));
 
         verify(customerServiceMock, times(1)).listCustomers();
+        verifyNoMoreInteractions(customerServiceMock);
+    }
+
+    @Test
+    public void getCustomerRestTest() throws Exception {
+        Customer one = new Customer();
+        one.setId(2);
+        one.setName("Betty Rubble");
+        one.setAddress("14 Bedrock");
+        one.setTel("0800 STONE");
+
+        when(customerServiceMock.getCustomerById(one.getId())).thenReturn(one);
+
+        ResultActions result = mockMvc.perform(get("/getcustomer/{id}", 2));
+
+        System.out.println("getCustomerRestTest() - " + result.andReturn().getResponse().getContentAsString());
+
+        result.andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("$.id", is(2)))
+                .andExpect(jsonPath("$.name", is("Betty Rubble")))
+                .andExpect(jsonPath("$.address", is("14 Bedrock")))
+                .andExpect(jsonPath("$.tel", is("0800 STONE")));
+
+        verify(customerServiceMock, times(1)).getCustomerById(one.getId());
+        verifyNoMoreInteractions(customerServiceMock);
+    }
+
+    @Test
+    public void getUnknownCustomerRestTest() throws Exception {
+
+        when(customerServiceMock.getCustomerById(3)).thenThrow(new CustomerNotFoundException(3, new Exception("getUnknownCustomerRestTest()")));
+
+        ResultActions result = mockMvc.perform(get("/getcustomer/{id}", 3));
+
+        System.out.println("getCustomerRestTest() - " + result.andReturn().getResponse().getContentAsString());
+
+        result.andExpect(status().isNotFound());
+
+        verify(customerServiceMock, times(1)).getCustomerById(3);
         verifyNoMoreInteractions(customerServiceMock);
     }
 

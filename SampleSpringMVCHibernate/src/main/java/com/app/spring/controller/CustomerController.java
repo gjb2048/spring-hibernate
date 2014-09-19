@@ -46,6 +46,12 @@ public class CustomerController {
         return this.customerService.listCustomers();
     }
     
+    @RequestMapping(value = "/getcustomer/{id}", method = RequestMethod.GET)
+    public @ResponseBody Customer getCustomerRest(@PathVariable("id") int id) throws CustomerNotFoundException {
+        return this.customerService.getCustomerById(id);
+    }
+    
+    
     // For both add and update person.
     @RequestMapping(value = "/customer/add", method = RequestMethod.POST)
     public String addCustomer(@ModelAttribute("customer") Customer c) {
